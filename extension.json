@@ -1,0 +1,54 @@
+{
+  "name": "3DAlloy",
+  "author": "Dolfinus",
+  "url": "https://www.mediawiki.org/wiki/Extension:3DAlloy",
+  "description": "This extension provides a 3D viewer for JSON/Buff files",
+  "version": "1.0",
+  "license-name": "MIT",
+  "type": "media",
+  "ResourceModules": {
+    "ext.3DAlloy": {
+      "position": "bottom",
+      "scripts": [
+        "three.js",
+        "Projector.js",
+        "CanvasRenderer.js",
+        "OrbitControls.js",
+        "3DAlloy.js"
+
+      ]
+    }
+  },
+  "ExtensionMessagesFiles": {
+    "ThreeDimentionAlloy": "3DAlloy_magic.i18n.php"
+  },
+  "ResourceFileModulePaths": {
+    "localBasePath": "js",
+    "remoteExtPath": "3DAlloy/js"
+  },
+  "MediaHandlers": {
+    "application/json": "ThreeDimentionAlloy",
+    "application/buff": "ThreeDimentionAlloy"
+  },
+  "AutoloadClasses": {
+    "ThreeDimentionAlloy": "3DAlloy_body.php"
+  },
+  "Hooks": {
+    "ParserMakeImageParams": [
+	    "ThreeDimentionAlloy::onParserMakeImageParams"
+	],
+  	"ParserFirstCallInit": [
+	    "ThreeDimentionAlloy::onParserFirstCallInit"
+	],
+    "ImageBeforeProduceHTML": [
+        "ThreeDimentionAlloy::onImageBeforeProduceHTML"
+    ],
+    "ImageOpenShowImageInlineBefore": [
+        "ThreeDimentionAlloy::onImageOpenShowImageInlineBefore"
+    ],
+    "BeforePageDisplay": [
+        "ThreeDimentionAlloy::onBeforePageDisplay"
+    ]
+  },
+  "manifest_version": 1
+}
