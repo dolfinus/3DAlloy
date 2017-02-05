@@ -125,6 +125,15 @@ function add_model(N, mesh, params) {
   render(N);
 }
 
+function load_obj(N, mesh, parameters) {
+    mesh.traverse( function ( child ) {
+        if (child instanceof THREE.Mesh ) {
+            child.material = add_material(parameters);
+        }
+    });
+    add_model(N, mesh, params);
+}
+
 function load_json(N, geometry, parameters) {
   	geometry.computeBoundingBox();
   	geometry.center();
@@ -137,7 +146,15 @@ function load_json(N, geometry, parameters) {
 function load_file(N,parameters) {
     var loader;
 
-	if ( parameters.file.match(/\.(buffjson|buff)$/ig) !== null) {
+  if ( parameters.file.match(/\.obj$/ig) !== null) {
+
+		loader=new THREE.OBJLoader();
+    loader.load(parameters.file, function (mesh) {
+		    load_obj(N, mesh, parameters)
+	  });
+	  return true;
+
+	} else if ( parameters.file.match(/\.(buffjson|buff)$/ig) !== null) {
 
 		loader=new THREE.BufferGeometryLoader();
 

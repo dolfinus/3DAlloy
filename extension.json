@@ -13,9 +13,9 @@
         "three.js",
         "Projector.js",
         "CanvasRenderer.js",
+        "OBJLoader.js",
         "OrbitControls.js",
         "3DAlloy.js"
-
       ]
     }
   },
@@ -28,7 +28,8 @@
   },
   "MediaHandlers": {
     "application/json": "ThreeDimentionAlloy",
-    "application/buff": "ThreeDimentionAlloy"
+    "application/buff": "ThreeDimentionAlloy",
+    "application/obj": "ThreeDimentionAlloy"
   },
   "AutoloadClasses": {
     "ThreeDimentionAlloy": "3DAlloy_body.php"

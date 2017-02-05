@@ -52,6 +52,7 @@
 	    switch ($file->getMimeType() ) {
 			case 'application/json':
 			case 'application/buff':
+      case 'application/obj':
 
 	            $tmp = [];
 	            parse_str(str_replace(array(','), array('&'), $params["frame"]["caption"]), $tmp);
@@ -119,6 +120,7 @@
   		switch ( $imagepage->getDisplayedFile()->getMimeType() ) {
   			case 'application/json':
   			case 'application/buff':
+        case 'application/obj':
 
   			    $params=$wg3DAlloy;
   			    $params["file"] = $imagepage->getDisplayedFile()->getFullURL();
@@ -136,6 +138,7 @@
         switch ($file->getMimeType() ) {
           case 'application/json':
           case 'application/buff':
+          case 'application/obj':
 
             $params=array_merge($wg3DAlloy, $handlerParams);
             $params["file"] = $file->getFullUrl();

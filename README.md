@@ -6,16 +6,19 @@ There you can see [example 3D model page](https://en.crystalls.info/Template:Ico
 ## Example
 ![example of 3D model view](https://upload.wikimedia.org/wikipedia/mediawiki/f/f7/3DAlloy.png "3D model example")
 
-## Supported extensions
+## Supported file extensions
 THREE.js model format:
 * .json
 * .3djson
 * .3dj
 * .three
 
-THREE.js model format with buffered geometry
+THREE.js model buffer geometry format:
 * .buff
 * .buffjson
+
+OBJ file format:
+* .obj
 
 ## Intall
 Download the latest snapshot and extract it to your extensions directory. Then include it in your [LocalSettings.php](https://www.mediawiki.org/wiki/Manual:LocalSettings.php) file as in the following example:
@@ -25,10 +28,23 @@ wfLoadExtension( '3DAlloy' );
 $wgFileExtensions = array_merge(
   $wgFileExtensions, array(
       'json', '3dj', '3djson', 'three',
-      'buff', 'buffjson'
+      'buff', 'buffjson',
+      'obj'
   )
 );
 
+```
+
+Then add these lines to the end of your Mediawiki _includes/mime.types_ file:
+```
+application/json json 3djson 3dj three buff buffjson
+application/obj obj
+```
+
+And then to _includes/mime.info_ file:
+```
+application/json	[TEXT]
+application/obj [TEXT]
 ```
 
 ## Usage
@@ -45,7 +61,7 @@ $wgFileExtensions = array_merge(
 ...
 {{#3d:Model.json|width|height|color|opacity|norotate|scale|z|style|class}}
 ```
-Instead of uploaded filename you can use an url for file at external site.
+Instead of uploaded filename you can use an url for file located in external site.
 
 ### As Parser tag
 ```html
