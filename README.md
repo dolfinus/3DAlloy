@@ -24,7 +24,7 @@ STL (binary) file format:
 * .stl
 * .stlb
 
-## Intall
+## Install
 Download the latest snapshot and extract it to your extensions directory. Then include it in your [LocalSettings.php](https://www.mediawiki.org/wiki/Manual:LocalSettings.php) file as in the following example:
 ```php
 wfLoadExtension( '3DAlloy' );

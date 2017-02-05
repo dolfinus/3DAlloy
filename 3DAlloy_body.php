@@ -21,6 +21,7 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
  global $wg3DAlloy;
+ $wg3DAlloy["file"]='';
  if (!isset($wg3DAlloy["width"]   )) $wg3DAlloy["width"]    = 300           ;
  if (!isset($wg3DAlloy["height"]  )) $wg3DAlloy["height"]   = 300           ;
  if (!isset($wg3DAlloy["color"]   )) $wg3DAlloy["color"]    = '0xff00ff'    ;
@@ -32,7 +33,7 @@
  $wg3DAlloy["class"] = '3d-container'. (isset($wg3DAlloy["class"]) ? ' '.$wg3DAlloy["class"] : '') ;
 
  class ThreeDimentionAlloy extends ImageHandler {
-	public static function onBeforePageDisplay ( OutputPage $out, Skin $skin){
+	public static function onBeforePageDisplay ( OutputPage $out, $skin){
 	    global $wg3DAlloy;
 
   		if (strpos($out->getHTML(),'class="'.$wg3DAlloy["class"]) !== false){
@@ -70,8 +71,8 @@
 	    global $wg3DAlloy;
 
       $params = array_merge($wg3DAlloy, $args);
-      $params["style"] .= ($params["style"] !== $wg3DAlloy["style"]) ? ' '.$wg3DAlloy["style"] : '';
-      $params["class"] .= ($params["class"] !== $wg3DAlloy["class"]) ? ' '.$wg3DAlloy["class"] : '';
+      $params["style"] = $wg3DAlloy["style"].' '.$params["style"];
+      $params["class"] = $wg3DAlloy["class"].' '.$params["class"];
       $params["file"]   = (!isset($params["file"])) ? $input : 'ERROR';
 
       $f = wfFindFile( $params["file"] );
@@ -89,6 +90,11 @@
   		$args = func_get_args();
   		array_shift( $args );
 
+      $f = wfFindFile( $args[0] );
+      if ($f) {
+          $args[0] = ($f->getFullUrl());
+      }
+
       $i=0;
   		foreach($wg3DAlloy as $param=>$value) {
   		    if (isset($args[$i])) {
@@ -99,16 +105,11 @@
   		    $i++;
       }
 
-  		$f = wfFindFile( $args[0] );
-  		if ($f) {
-  		    $args[0] = "file=".($f->getFullUrl());
-  		}
-
   		$params = [];
   		parse_str( implode( "&", $args ), $params );
   		$params = array_merge($wg3DAlloy, $params );
-      $params["style"] .= ($params["style"] !== $wg3DAlloy["style"]) ? ' '.$wg3DAlloy["style"] : '';
-      $params["class"] .= ($params["class"] !== $wg3DAlloy["class"]) ? ' '.$wg3DAlloy["class"] : '';
+      $params["style"] = $wg3DAlloy["style"].' '.$params["style"];
+      $params["class"] = $wg3DAlloy["class"].' '.$params["class"];
 
   		$elem = Html::element('canvas', $params, $params["file"]);
 
