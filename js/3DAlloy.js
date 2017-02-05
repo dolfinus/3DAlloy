@@ -154,6 +154,10 @@ function load_file(N,parameters) {
 	  });
 	  return true;
 
+	} else if ( parameters.file.match(/\.(stl|stlb)$/ig) !== null) {
+
+		loader=new THREE.STLLoader();
+
 	} else if ( parameters.file.match(/\.(buffjson|buff)$/ig) !== null) {
 
 		loader=new THREE.BufferGeometryLoader();

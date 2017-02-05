@@ -20,6 +20,10 @@ THREE.js model buffer geometry format:
 OBJ file format:
 * .obj
 
+STL (binary) file format:
+* .stl
+* .stlb
+
 ## Intall
 Download the latest snapshot and extract it to your extensions directory. Then include it in your [LocalSettings.php](https://www.mediawiki.org/wiki/Manual:LocalSettings.php) file as in the following example:
 ```php
@@ -29,7 +33,8 @@ $wgFileExtensions = array_merge(
   $wgFileExtensions, array(
       'json', '3dj', '3djson', 'three',
       'buff', 'buffjson',
-      'obj'
+      'obj',
+      'stl', 'stlb'
   )
 );
 
@@ -39,12 +44,14 @@ Then add these lines to the end of your Mediawiki _includes/mime.types_ file:
 ```
 application/json json 3djson 3dj three buff buffjson
 application/obj obj
+application/stl stl stlb
 ```
 
 And then to _includes/mime.info_ file:
 ```
 application/json	[TEXT]
 application/obj [TEXT]
+application/stl [TEXT]
 ```
 
 ## Usage
