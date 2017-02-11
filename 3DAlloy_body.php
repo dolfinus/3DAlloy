@@ -1,25 +1,4 @@
 <?php
-/**
- *
- * Handler for stl files.
- *
- *
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- * http://www.gnu.org/copyleft/gpl.html
- */
  global $wg3DAlloy;
  $wg3DAlloy["file"]='';
  if (!isset($wg3DAlloy["width"]   )) $wg3DAlloy["width"]    = 300           ;
@@ -50,11 +29,7 @@
 	static public function onParserMakeImageParams($title, $file, &$params, Parser $parser ) {
 	    global $wg3DAlloy;
 
-	    switch ($file->getMimeType() ) {
-			case 'application/json':
-      case 'application/obj':
-      case 'application/stl':
-
+	    if (self::check_file($file)) {
 	            $tmp = [];
 	            parse_str(str_replace(array(','), array('&'), $params["frame"]["caption"]), $tmp);
 	            foreach($wg3DAlloy as $param => $value) {
@@ -118,28 +93,21 @@
 
 	public static function onImageOpenShowImageInlineBefore( $imagepage, $out ){
   		global $wg3DAlloy;
-  		switch ( $imagepage->getDisplayedFile()->getMimeType() ) {
-  			case 'application/json':
-        case 'application/obj':
-        case 'application/stl':
+
+  		if (self::check_file($imagepage->getDisplayedFile())) {
 
   			    $params=$wg3DAlloy;
   			    $params["file"] = $imagepage->getDisplayedFile()->getFullURL();
 
   			    $out->addHtml(Html::element('canvas', $params, $params["file"]));
   			    $out->addModules('ext.3DAlloy');
-  			default:
-  			    break;
   		}
 	}
 
     public static function onImageBeforeProduceHTML (&$dummy, &$title, &$file, &$frameParams, &$handlerParams, &$time, &$res) {
         global $wg3DAlloy;
 
-        switch ($file->getMimeType() ) {
-          case 'application/json':
-          case 'application/obj':
-          case 'application/stl':
+        if (self::check_file($file)) {
 
             $params=array_merge($wg3DAlloy, $handlerParams);
             $params["file"] = $file->getFullUrl();
@@ -153,4 +121,9 @@
 	function doTransform( $image, $dstPath, $dstUrl, $params, $flags = 0){
     //is compulsory for ImageHandler
 	}
+
+	public static function check_file($file){
+
+    return ($file->getMimeType() === "application/json" || $file->getMimeType() === "application/obj" || $file->getMimeType() === "application/stl" );
+  }
 }

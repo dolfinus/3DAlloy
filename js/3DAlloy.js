@@ -12,63 +12,89 @@ if (NodeList.prototype.forEach === undefined) {
 
 var Canvas=document.getElementsByClassName('3d-container');
 if ( Canvas ) {
-	var camera=[], scene=[], renderer=[], controls=[], model=[], plane=[], params = {}, rotate=[],
-	rotation=true,rotateX=[], rotateY=[], speedX=0.01, speedY=0.015,
-	def_color=0xff00ff,
-	def_opacity=0.8,
-	def_scale=100,
-	def_z=75,
-	def_norotate=false,
-	keys = { LEFT: 37, RIGHT: 39, UP: 38, DOWN: 40, RETURN: 13, SPACE: 32, HOME: 36, PLUS: 107, MINUS: 109 },
-	model_material = new THREE.MeshLambertMaterial({overdraw: 0.5, transparent:true }),
-	CanvasChangedEvent = document.createEvent('Event'), DoubleClickEvent=document.createEvent('Event'),
-	page_params=document.getElementsByTagName('body')[0].className,
-  dark=(page_params.indexOf("dark") !== -1),
-  edit=(page_params.indexOf("action-edit") !== -1 || page_params.indexOf("action-submit") !== -1),
-	background_color= dark ? 0x4c4c4c : 0xf0f0f0,
-	plane_color= dark ? 0x595959 : 0xe0e0e0;
+  var camera = [],
+      scene = [],
+      renderer = [],
+      controls = [],
+      model = [],
+      plane = [],
+      params = {},
+      rotate = [],
+      rotation = true,
+      rotateX = [],
+      rotateY = [],
+      speedX = 0.01,
+      speedY = 0.015,
+      def_color = 0xff00ff,
+      def_opacity = 0.8,
+      def_scale = 100,
+      def_z = 75,
+      def_norotate = false,
+      keys = {
+          LEFT: 37,
+          RIGHT: 39,
+          UP: 38,
+          DOWN: 40,
+          RETURN: 13,
+          SPACE: 32,
+          HOME: 36,
+          PLUS: 107,
+          MINUS: 109
+      },
+      CanvasChangedEvent = document.createEvent('Event'),
+      DoubleClickEvent   = document.createEvent('Event'),
+      page_params = document.getElementsByTagName('body')[0].className,
+      dark        = (page_params.indexOf("dark") !== -1),
+      edit        = (page_params.indexOf("action-edit") !== -1 || page_params.indexOf("action-submit") !== -1),
+      background_color = dark ? 0x4c4c4c : 0xf0f0f0,
+      plane_color      = dark ? 0x595959 : 0xe0e0e0,
+      model_material   = new THREE.MeshLambertMaterial({
+          overdraw: 0.5,
+          transparent: true
+      });
+      
   if (!edit) document.addEventListener("keydown", onKeyDown, false);
-	CanvasChangedEvent.initEvent('canvas_changed', false, false);
-	DoubleClickEvent.initEvent('dbl_click', false, false);
-	Canvas.forEach(function(item, N) {
+  CanvasChangedEvent.initEvent('canvas_changed', false, false);
+  DoubleClickEvent.initEvent('dbl_click', false, false);
+  Canvas.forEach(function(item, id) {
 
-    create_scene(N);
+    create_scene(id);
 
-		add_light(N);
-		add_camera(N);
-		add_renderer(N);
-		add_controls(N);
-		add_plane(N);
+		add_light(id);
+		add_camera(id);
+		add_renderer(id);
+		add_controls(id);
+		add_plane(id);
 
-		params = get_params(N);
-		rotate[N]= !params.norotate;
-		rotateX[N]=0;
-		rotateY[N]=0;
+		params = get_params(id);
+		rotate[id]= !params.norotate;
+		rotateX[id]=0;
+		rotateY[id]=0;
 
-		load_file(N,params);
+		load_file(id,params);
 		item.addEventListener("canvas_changed", OnCanvasRedraw, false);
 		item.addEventListener("dbl_click", UnRotate, false);
-		item.setAttribute("id",N);
+		item.setAttribute("id",id);
 	});
 	animate();
 }
 
-function get_params(N) {
+function get_params(id) {
 	var params={file: "", color: def_color, opacity: def_opacity, norotate: def_norotate, scale: def_scale, z: def_z};
-	params.file            = Canvas[N].getAttribute('file');
-	params.color           = Canvas[N].getAttribute('color')        !== null ? parseInt(  Canvas[N].getAttribute('color'),16) : def_color;
-	params.opacity         = Canvas[N].getAttribute('opacity')      !== null ? parseFloat(Canvas[N].getAttribute('opacity') ) : def_opacity;
-	params.scale           = Canvas[N].getAttribute('scale')        !== null ? parseFloat(Canvas[N].getAttribute('scale')   ) : def_scale;
-	params.z               = Canvas[N].getAttribute('z')            !== null ? parseFloat(Canvas[N].getAttribute('z')       ) : def_z;
-	params.norotate        = Canvas[N].getAttribute('norotate')     !== null ? ((Canvas[N].getAttribute('norotate') === "1" || Canvas[N].getAttribute('norotate') === "true") ? true : false) : def_norotate;
+	params.file            = Canvas[id].getAttribute('file');
+	params.color           = Canvas[id].getAttribute('color')        !== null ? parseInt(  Canvas[id].getAttribute('color'),16) : def_color;
+	params.opacity         = Canvas[id].getAttribute('opacity')      !== null ? parseFloat(Canvas[id].getAttribute('opacity') ) : def_opacity;
+	params.scale           = Canvas[id].getAttribute('scale')        !== null ? parseFloat(Canvas[id].getAttribute('scale')   ) : def_scale;
+	params.z               = Canvas[id].getAttribute('z')            !== null ? parseFloat(Canvas[id].getAttribute('z')       ) : def_z;
+	params.norotate        = Canvas[id].getAttribute('norotate')     !== null ? ((Canvas[id].getAttribute('norotate') === "1" || Canvas[id].getAttribute('norotate') === "true") ? true : false) : def_norotate;
 	return params;
 }
 
-function create_scene(N) {
-	scene[N] = new THREE.Scene();
+function create_scene(id) {
+	scene[id] = new THREE.Scene();
 }
 
-function add_light(N) {
+function add_light(id) {
 	var light =[];
 	for( var i=0; i<5; ++i) {
 		light[i]= new THREE.DirectionalLight(0xffffff);
@@ -80,33 +106,33 @@ function add_light(N) {
 	light[4].position.set(	-100,	 50,	-100 );
 	for(i=0; i<5; ++i) {
 		light[i].intensity=0.4;
-		scene[N].add(light[i]);
+		scene[id].add(light[i]);
 	}
-	scene[N].add( new THREE.AmbientLight( 0x101010 ) );
+	scene[id].add( new THREE.AmbientLight( 0x101010 ) );
 }
 
-function add_camera(N) {
-	camera[N] = new THREE.PerspectiveCamera( 65, Canvas[N].width / Canvas[N].height, 1, 1000 );
-	camera[N].position.y = 100;
-	camera[N].position.z = 400;
+function add_camera(id) {
+	camera[id] = new THREE.PerspectiveCamera( 65, Canvas[id].width / Canvas[id].height, 1, 1000 );
+	camera[id].position.y = 100;
+	camera[id].position.z = 400;
 }
 
-function add_renderer(N) {
-	renderer[N] = new THREE.CanvasRenderer({canvas: Canvas[N], sortObjects: false, sortElements: false });
-	renderer[N].setClearColor( background_color );
-	renderer[N].setSize( Canvas[N].width, Canvas[N].height );
+function add_renderer(id) {
+	renderer[id] = new THREE.CanvasRenderer({canvas: Canvas[id], sortObjects: false, sortElements: false });
+	renderer[id].setClearColor( background_color );
+	renderer[id].setSize( Canvas[id].width, Canvas[id].height );
 }
 
-function add_controls(N) {
-	controls[N] = new THREE.OrbitControls(camera[N], Canvas[N]);
+function add_controls(id) {
+	controls[id] = new THREE.OrbitControls(camera[id], Canvas[id]);
 }
 
-function add_plane(N) {
-	plane[N] = new THREE.GridHelper( 150, 8);
-	plane[N].setColors(plane_color, plane_color);
-	plane[N].position.y = -75;
-	plane[N].updateMatrix();
-	scene[N].add( plane[N] );
+function add_plane(id) {
+	plane[id] = new THREE.GridHelper( 150, 8);
+	plane[id].setColors(plane_color, plane_color);
+	plane[id].position.y = -75;
+	plane[id].updateMatrix();
+	scene[id].add( plane[id] );
 }
 
 function add_material(parameters) {
@@ -116,41 +142,41 @@ function add_material(parameters) {
   return material;
 }
 
-function add_model(N, mesh, params) {
+function add_model(id, mesh, params) {
   mesh.scale.x = mesh.scale.y = mesh.scale.z = params.scale;
   mesh.position.y = params.z;
   mesh.updateMatrix();
-  scene[N].add(mesh);
-  model[N]=mesh;
-  render(N);
+  scene[id].add(mesh);
+  model[id]=mesh;
+  render(id);
 }
 
-function load_obj(N, mesh, parameters) {
+function load_obj(id, mesh, parameters) {
     mesh.traverse( function ( child ) {
         if (child instanceof THREE.Mesh ) {
             child.material = add_material(parameters);
         }
     });
-    add_model(N, mesh, params);
+    add_model(id, mesh, params);
 }
 
-function load_json(N, geometry, parameters) {
+function load_json(id, geometry, parameters) {
   	geometry.computeBoundingBox();
   	geometry.center();
 
     var material=add_material(parameters);
     var mesh = new THREE.Mesh(geometry,material);
-    add_model(N, mesh, params);
+    add_model(id, mesh, params);
 }
 
-function load_file(N,parameters) {
+function load_file(id,parameters) {
     var loader;
 
   if ( parameters.file.match(/\.obj$/ig) !== null) {
 
 		loader=new THREE.OBJLoader();
     loader.load(parameters.file, function (mesh) {
-		    load_obj(N, mesh, parameters)
+		    load_obj(id, mesh, parameters)
 	  });
 	  return true;
 
@@ -172,7 +198,7 @@ function load_file(N,parameters) {
 	}
 
 	loader.load(parameters.file, function (geometry) {
-		load_json(N, geometry, parameters)
+		load_json(id, geometry, parameters)
 	});
 	return true;
 }
@@ -223,7 +249,7 @@ function animate() {
   });
 }
 
-function render(N) {
-    controls[N].update();
-    renderer[N].render( scene[N], camera[N] );
+function render(id) {
+    controls[id].update();
+    renderer[id].render( scene[id], camera[id] );
 }
