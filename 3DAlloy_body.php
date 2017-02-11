@@ -48,11 +48,12 @@
       $params = array_merge($wg3DAlloy, $args);
       $params["style"] = $wg3DAlloy["style"].' '.$params["style"];
       $params["class"] = $wg3DAlloy["class"].' '.$params["class"];
-      $params["file"]   = (!isset($params["file"])) ? $input : 'ERROR';
+      $params["file"]  = (isset($args["file"]) ? $params["file"] : trim($input));
 
-      $f = wfFindFile( $params["file"] );
+      $f = Title::newFromText( $params["file"], NS_FILE );
+      $f = wfFindFile( $f->getBaseText() );
   		if ($f) {
-  		    $params["file"] = $f->getFullUrl();
+  		    $params["file"] = $f->getCanonicalUrl();
   		}
 
   		$elem = Html::element('canvas', $params, $input);
@@ -65,9 +66,10 @@
   		$args = func_get_args();
   		array_shift( $args );
 
-      $f = wfFindFile( $args[0] );
+      $f = Title::newFromText( trim($args[0]), NS_FILE );
+      $f = wfFindFile( $f->getBaseText() );
       if ($f) {
-          $args[0] = ($f->getFullUrl());
+          $args[0] = ($f->getCanonicalUrl());
       }
 
       $i=0;
@@ -97,7 +99,7 @@
   		if (self::check_file($imagepage->getDisplayedFile())) {
 
   			    $params=$wg3DAlloy;
-  			    $params["file"] = $imagepage->getDisplayedFile()->getFullURL();
+  			    $params["file"] = $imagepage->getDisplayedFile()->getCanonicalUrl();
 
   			    $out->addHtml(Html::element('canvas', $params, $params["file"]));
   			    $out->addModules('ext.3DAlloy');
@@ -110,7 +112,7 @@
         if (self::check_file($file)) {
 
             $params=array_merge($wg3DAlloy, $handlerParams);
-            $params["file"] = $file->getFullUrl();
+            $params["file"] = $file->getCanonicalUrl();
             $res = Html::element('canvas', $params, $params["file"]);
             return false;
 		    }
