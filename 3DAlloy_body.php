@@ -1,15 +1,21 @@
 <?php
  global $wg3DAlloy;
+ $wg3DAlloy_ = $wg3DAlloy;
+ unset ($wg3DAlloy);
+
+ global $wg3DAlloy;
+ $wg3DAlloy        =[];
  $wg3DAlloy["file"]='';
- if (!isset($wg3DAlloy["width"]   )) $wg3DAlloy["width"]    = 300;
- if (!isset($wg3DAlloy["height"]  )) $wg3DAlloy["height"]   = 300;
- if (!isset($wg3DAlloy["color"]   )) $wg3DAlloy["color"]    = '';
- if (!isset($wg3DAlloy["opacity"] )) $wg3DAlloy["opacity"]  = '';
- if (!isset($wg3DAlloy["norotate"])) $wg3DAlloy["norotate"] = '';
- if (!isset($wg3DAlloy["scale"]   )) $wg3DAlloy["scale"]    = '';
- if (!isset($wg3DAlloy["z"]       )) $wg3DAlloy["z"]        = '';
- if (!isset($wg3DAlloy["style"]   )) $wg3DAlloy["style"]    = '';
- $wg3DAlloy["class"] = '3d-container'. (isset($wg3DAlloy["class"]) ? ' '.$wg3DAlloy["class"] : '') ;
+ $wg3DAlloy["width"]    = isset($wg3DAlloy_["width"]   ) ? $wg3DAlloy_["width"]   : 300;
+ $wg3DAlloy["height"]   = isset($wg3DAlloy_["height"]  ) ? $wg3DAlloy_["height"]  : 300;
+ $wg3DAlloy["color"]    = isset($wg3DAlloy_["color"]   ) ? $wg3DAlloy_["color"]   : '';
+ $wg3DAlloy["opacity"]  = isset($wg3DAlloy_["opacity"] ) ? $wg3DAlloy_["opacity"] : '';
+ $wg3DAlloy["norotate"] = isset($wg3DAlloy_["norotate"]) ? $wg3DAlloy_["norotate"]: '';
+ $wg3DAlloy["scale"]    = isset($wg3DAlloy_["scale"]   ) ? $wg3DAlloy_["scale"]   : '';
+ $wg3DAlloy["z"]        = isset($wg3DAlloy_["z"]       ) ? $wg3DAlloy_["z"]       : '';
+ $wg3DAlloy["style"]    = isset($wg3DAlloy_["style"]   ) ? $wg3DAlloy_["style"]   : '';
+ $wg3DAlloy["class"] = '3d-container'.
+                         (isset($wg3DAlloy_["class"]) ? ' '.$wg3DAlloy_["class"]  : '');
 
  class ThreeDimentionAlloy extends ImageHandler {
 	public static function onBeforePageDisplay ( OutputPage $out, $skin){

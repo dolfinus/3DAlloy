@@ -91,6 +91,8 @@ You also can use url instead of short filename.
 |style    |Additional canvas CSS style            |             |
 |class    |Additional canvas HTML class           |             |
 
+Width and height can be set to _0_ value, so size of viewer will be set according to user screen dimensions.
+
 ### Configure
 All default values can be changed in your [LocalSettings.php](https://www.mediawiki.org/wiki/Manual:LocalSettings.php) file:
 ```php

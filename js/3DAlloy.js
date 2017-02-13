@@ -52,31 +52,50 @@ if ( Canvas ) {
           overdraw: 0.5,
           transparent: true
       });
-      
+
   if (!edit) document.addEventListener("keydown", onKeyDown, false);
   CanvasChangedEvent.initEvent('canvas_changed', false, false);
   DoubleClickEvent.initEvent('dbl_click', false, false);
   Canvas.forEach(function(item, id) {
+    if (Canvas[id].width === 0 || Canvas[id].height === 0) {
+      window.addEventListener("resize", redraw);
+      resize_canvas(id);
+    }
 
     create_scene(id);
 
-		add_light(id);
-		add_camera(id);
-		add_renderer(id);
-		add_controls(id);
-		add_plane(id);
+    add_light(id);
+    add_camera(id);
+    add_renderer(id);
+    add_controls(id);
+    add_plane(id);
 
-		params = get_params(id);
-		rotate[id]= !params.norotate;
-		rotateX[id]=0;
-		rotateY[id]=0;
+    params = get_params(id);
+    rotate[id]= !params.norotate;
+    rotateX[id]=0;
+    rotateY[id]=0;
 
-		load_file(id,params);
-		item.addEventListener("canvas_changed", OnCanvasRedraw, false);
-		item.addEventListener("dbl_click", UnRotate, false);
-		item.setAttribute("id",id);
-	});
+    load_file(id,params);
+    item.addEventListener("canvas_changed", OnCanvasRedraw, false);
+    item.addEventListener("dbl_click", UnRotate, false);
+    item.setAttribute("id",id);
+  });
 	animate();
+}
+
+function redraw(){
+  Canvas.forEach(function(item, id) {
+    resize_canvas(id);
+    renderer[id].setSize( Canvas[id].width, Canvas[id].height );
+    renderer[id].clear();
+    render(id);
+  });
+}
+
+function resize_canvas(id){
+    var value = Math.max(Math.min(((window.innerHeight !== 0) ? window.innerHeight : screen.height)-150, ((window.innerWidth !== 0) ? window.innerWidth : screen.width)-270), 300);
+    Canvas[id].width  = value;
+    Canvas[id].height = value;
 }
 
 function get_params(id) {
