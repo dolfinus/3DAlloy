@@ -1,14 +1,14 @@
 <?php
  global $wg3DAlloy;
  $wg3DAlloy["file"]='';
- if (!isset($wg3DAlloy["width"]   )) $wg3DAlloy["width"]    = 300           ;
- if (!isset($wg3DAlloy["height"]  )) $wg3DAlloy["height"]   = 300           ;
- if (!isset($wg3DAlloy["color"]   )) $wg3DAlloy["color"]    = '0xff00ff'    ;
- if (!isset($wg3DAlloy["opacity"] )) $wg3DAlloy["opacity"]  = 0.8           ;
- if (!isset($wg3DAlloy["norotate"])) $wg3DAlloy["norotate"] = false         ;
- if (!isset($wg3DAlloy["scale"]   )) $wg3DAlloy["scale"]    = 100           ;
- if (!isset($wg3DAlloy["z"]       )) $wg3DAlloy["z"]        = 75            ;
- if (!isset($wg3DAlloy["style"]   )) $wg3DAlloy["style"]    = ''            ;
+ if (!isset($wg3DAlloy["width"]   )) $wg3DAlloy["width"]    = 300;
+ if (!isset($wg3DAlloy["height"]  )) $wg3DAlloy["height"]   = 300;
+ if (!isset($wg3DAlloy["color"]   )) $wg3DAlloy["color"]    = '';
+ if (!isset($wg3DAlloy["opacity"] )) $wg3DAlloy["opacity"]  = '';
+ if (!isset($wg3DAlloy["norotate"])) $wg3DAlloy["norotate"] = '';
+ if (!isset($wg3DAlloy["scale"]   )) $wg3DAlloy["scale"]    = '';
+ if (!isset($wg3DAlloy["z"]       )) $wg3DAlloy["z"]        = '';
+ if (!isset($wg3DAlloy["style"]   )) $wg3DAlloy["style"]    = '';
  $wg3DAlloy["class"] = '3d-container'. (isset($wg3DAlloy["class"]) ? ' '.$wg3DAlloy["class"] : '') ;
 
  class ThreeDimentionAlloy extends ImageHandler {
@@ -51,12 +51,21 @@
       $params["file"]  = (isset($args["file"]) ? $params["file"] : trim($input));
 
       $f = Title::newFromText( $params["file"], NS_FILE );
-      $f = wfFindFile( $f->getBaseText() );
+      if ($f) {
+        $f = wfFindFile( $f->getBaseText() );
+      }
   		if ($f) {
   		    $params["file"] = $f->getCanonicalUrl();
   		}
 
-  		$elem = Html::element('canvas', $params, $input);
+      $par = [];
+      foreach($params as $key=>$value){
+        if ($value !== '') {
+          $par[$key]=$value;
+        }
+      }
+
+  		$elem = Html::element('canvas', $par, $input);
 
   		return [ $elem, 'noParse'=> true, 'isHTML'=> 'true' ];
 	}
@@ -67,7 +76,9 @@
   		array_shift( $args );
 
       $f = Title::newFromText( trim($args[0]), NS_FILE );
-      $f = wfFindFile( $f->getBaseText() );
+      if ($f) {
+        $f = wfFindFile( $f->getBaseText() );
+      }
       if ($f) {
           $args[0] = ($f->getCanonicalUrl());
       }
@@ -88,7 +99,14 @@
       $params["style"] = $wg3DAlloy["style"].' '.$params["style"];
       $params["class"] = $wg3DAlloy["class"].' '.$params["class"];
 
-  		$elem = Html::element('canvas', $params, $params["file"]);
+      $par = [];
+      foreach($params as $key=>$value){
+        if ($value !== '') {
+          $par[$key]=$value;
+        }
+      }
+
+  		$elem = Html::element('canvas', $par, $params["file"]);
 
   		return [ $elem, 'noParse'=> true, 'isHTML'=> 'true' ];
 	}
@@ -101,7 +119,14 @@
   			    $params=$wg3DAlloy;
   			    $params["file"] = $imagepage->getDisplayedFile()->getCanonicalUrl();
 
-  			    $out->addHtml(Html::element('canvas', $params, $params["file"]));
+            $par = [];
+            foreach($params as $key=>$value){
+              if ($value !== '') {
+                $par[$key]=$value;
+              }
+            }
+
+  			    $out->addHtml(Html::element('canvas', $par, $params["file"]));
   			    $out->addModules('ext.3DAlloy');
   		}
 	}
@@ -113,7 +138,15 @@
 
             $params=array_merge($wg3DAlloy, $handlerParams);
             $params["file"] = $file->getCanonicalUrl();
-            $res = Html::element('canvas', $params, $params["file"]);
+
+            $par = [];
+            foreach($params as $key=>$value){
+              if ($value !== '') {
+                $par[$key]=$value;
+              }
+            }
+
+            $res = Html::element('canvas', $par, $params["file"]);
             return false;
 		    }
 
