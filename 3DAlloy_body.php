@@ -73,6 +73,14 @@
         }
       }
 
+      if (isset($par['color']) && (strpos($par['color'],'0x') === false)) {
+        if (is_numeric($par['color'])){
+          $par['color'] = '0x'.dechex($par['color']);
+        } else {
+          $par['color'] = '0x'.$par['color'];
+        }
+      }
+
       $elem = Html::element('canvas', $par, $input);
 
       return [ $elem, 'noParse'=> true, 'isHTML'=> 'true' ];
@@ -114,6 +122,14 @@
         }
       }
 
+      if (isset($par['color']) && (strpos($par['color'],'0x') === false)) {
+        if (is_numeric($par['color'])){
+          $par['color'] = '0x'.dechex($par['color']);
+        } else {
+          $par['color'] = '0x'.$par['color'];
+        }
+      }
+
       $elem = Html::element('canvas', $par, $params["file"]);
 
       return [ $elem, 'noParse'=> true, 'isHTML'=> 'true' ];
@@ -131,6 +147,14 @@
               foreach($params as $key=>$value){
                 if ($value !== '') {
                   $par[$key]=$value;
+                }
+              }
+
+              if (isset($par['color']) && (strpos($par['color'],'0x') === false)) {
+                if (is_numeric($par['color'])){
+                  $par['color'] = '0x'.dechex($par['color']);
+                } else {
+                  $par['color'] = '0x'.$par['color'];
                 }
               }
 
@@ -152,6 +176,14 @@
               foreach($params as $key=>$value){
                 if ($value !== '') {
                   $par[$key]=$value;
+                }
+              }
+
+              if (isset($par['color']) && (strpos($par['color'],'0x') === false)) {
+                if (is_numeric($par['color'])){
+                  $par['color'] = '0x'.dechex($par['color']);
+                } else {
+                  $par['color'] = '0x'.$par['color'];
                 }
               }
 

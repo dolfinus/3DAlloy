@@ -25,10 +25,10 @@ Object3D.prototype.resize = function() {
 };
 
 Object3D.prototype.render = function() {
-        this.resize();
-        this.renderer.setSize(this.canvas.width, this.canvas.height);
-        this.renderer.clear();
-        this.render();
+  this.resize();
+  this.renderer.setSize(this.canvas.width, this.canvas.height);
+  this.renderer.clear();
+  this.render();
 }
 
 Object3D.prototype.rotate = function(x, y) {
@@ -177,6 +177,7 @@ Object3D.prototype.animate = function() {
   if (this.model === undefined) return;
   //setTimeout( function() {requestAnimationFrame( animate );}, 1000 / 30 );
   var frame = requestAnimationFrame(this.animate.bind(this));
+  this.animation = true;
   if (this.model && this.rotation) {
       this.rotate_relative(speedX, speedY);
   }
@@ -241,17 +242,16 @@ function onKeyDown(event) {
   objects.forEach(function(item, id) {
     if (item.className.indexOf('locked') === -1) canvas.push(item);
   });
-	switch (event.keyCode) {
-		case keys.LEFT: 	canvas.forEach(function(item,i){ if (item.object !== undefined) {item.object.rotate_relative(    0, -0.05);} else {recreate_objects();}}); event.preventDefault(); break;
-		case keys.RIGHT: 	canvas.forEach(function(item,i){ if (item.object !== undefined) {item.object.rotate_relative(    0, +0.05);} else {recreate_objects();}}); event.preventDefault(); break;
-		case keys.UP: 		canvas.forEach(function(item,i){ if (item.object !== undefined) {item.object.rotate_relative(-0.05,     0);} else {recreate_objects();}}); event.preventDefault();	break;
-		case keys.DOWN: 	canvas.forEach(function(item,i){ if (item.object !== undefined) {item.object.rotate_relative(+0.05,     0);} else {recreate_objects();}}); event.preventDefault();	break;
-		case keys.RETURN:
-		case keys.SPACE:	window.rotation = !window.rotation; canvas.forEach(function(item,i){ if (item.object !== undefined) {item.object.rotation = window.rotation;} else {recreate_objects();}}); event.preventDefault(); break;
-		case keys.HOME: 	canvas.forEach(function(item,i){ if (item.object !== undefined) {item.object.rotate(0,0);} else {recreate_objects();}}); event.preventDefault(); break;
-		case keys.PLUS: 	speedX += 0.01; speedY += 0.01;	event.preventDefault(); break;
-		case keys.MINUS: 	speedX -= 0.01; speedY -= 0.01;	event.preventDefault(); break;
-	}
+  switch (event.keyCode) {
+    case keys.LEFT:   canvas.forEach(function(item,i){ if (item.object !== undefined) {item.object.rotate_relative(    0, -0.05);} else {recreate_objects();}}); event.preventDefault(); break;
+    case keys.RIGHT:  canvas.forEach(function(item,i){ if (item.object !== undefined) {item.object.rotate_relative(    0, +0.05);} else {recreate_objects();}}); event.preventDefault(); break;
+    case keys.UP:     canvas.forEach(function(item,i){ if (item.object !== undefined) {item.object.rotate_relative(-0.05,     0);} else {recreate_objects();}}); event.preventDefault();  break;
+    case keys.DOWN:   canvas.forEach(function(item,i){ if (item.object !== undefined) {item.object.rotate_relative(+0.05,     0);} else {recreate_objects();}}); event.preventDefault();  break;
+    case keys.SPACE:  window.rotation = !window.rotation; canvas.forEach(function(item,i){ if (item.object !== undefined) {item.object.rotation = window.rotation;} else {recreate_objects();}}); event.preventDefault(); break;
+    case keys.HOME:   canvas.forEach(function(item,i){ if (item.object !== undefined) {item.object.rotate(0,0);} else {recreate_objects();}}); event.preventDefault(); break;
+    case keys.PLUS:   speedX += 0.01; speedY += 0.01;  event.preventDefault(); break;
+    case keys.MINUS:  speedX -= 0.01; speedY -= 0.01;  event.preventDefault(); break;
+  }
 }
 
 function OnCanvasRedraw(event) {
