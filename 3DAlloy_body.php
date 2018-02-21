@@ -14,42 +14,44 @@
  $wg3DAlloy["scale"]    = isset($wg3DAlloy_["scale"]   ) ? $wg3DAlloy_["scale"]   : '';
  $wg3DAlloy["z"]        = isset($wg3DAlloy_["z"]       ) ? $wg3DAlloy_["z"]       : '';
  $wg3DAlloy["style"]    = isset($wg3DAlloy_["style"]   ) ? $wg3DAlloy_["style"]   : '';
- $wg3DAlloy["class"] = '3d-container'.
+ $wg3DAlloy["class"]    = 'threed-container'.
                          (isset($wg3DAlloy_["class"]) ? ' '.$wg3DAlloy_["class"]  : '');
 
  class ThreeDimentionAlloy extends ImageHandler {
-	public static function onBeforePageDisplay ( OutputPage $out, $skin){
-	    global $wg3DAlloy;
+  public static function onBeforePageDisplay ( OutputPage $out){
+      global $wg3DAlloy;
 
-  		if (strpos($out->getHTML(),'class="'.$wg3DAlloy["class"]) !== false){
-  			$out->addModules('ext.3DAlloy');
-  		}
-		}
+      if (strpos($out->getHTML(),'class="'.$wg3DAlloy["class"]) !== false){
+        $out->addModules('ext.3DAlloy');
+      }
+    }
 
-	static public function onParserFirstCallInit( Parser &$parser ) {
-  		$parser->setFunctionHook( "3d", "ThreeDimentionAlloy::parse3DFunc" );
-  		$parser->setHook('3d', "ThreeDimentionAlloy::parse3DTag");
-  		return true;
-	}
+  static public function onParserFirstCallInit( Parser &$parser ) {
+      $parser->setFunctionHook( "3d", "ThreeDimentionAlloy::parse3DFunc" );
+      $parser->setHook('3d', "ThreeDimentionAlloy::parse3DTag");
+      return true;
+  }
 
-	static public function onParserMakeImageParams($title, $file, &$params, Parser $parser ) {
-	    global $wg3DAlloy;
+  static public function onParserMakeImageParams($title, $file, &$params, Parser $parser ) {
+      global $wg3DAlloy;
 
-	    if (self::check_file($file)) {
-	            $tmp = [];
-	            parse_str(str_replace(array(','), array('&'), $params["frame"]["caption"]), $tmp);
-	            foreach($wg3DAlloy as $param => $value) {
-	                if (isset($tmp[$param])) $params["handler"][$param] = $tmp[$param];
-	            }
+      if ($file) {
+        if (self::check_file($file)) {
+                $tmp = [];
+                parse_str(str_replace(array(','), array('&'), $params["frame"]["caption"]), $tmp);
+                foreach($wg3DAlloy as $param => $value) {
+                    if (isset($tmp[$param])) $params["handler"][$param] = $tmp[$param];
+                }
 
-	    	      return false;
-		  }
+                return false;
+        }
+      }
+      
+      return true;
+  }
 
-		  return true;
-	}
-
-	static public function parse3DTag($input, array $args, Parser $parser, PPFrame $frame ) {
-	    global $wg3DAlloy;
+  static public function parse3DTag($input, array $args, Parser $parser, PPFrame $frame ) {
+      global $wg3DAlloy;
 
       $params = array_merge($wg3DAlloy, $args);
       $params["style"] = $wg3DAlloy["style"].' '.$params["style"];
@@ -60,9 +62,9 @@
       if ($f) {
         $f = wfFindFile( $f->getBaseText() );
       }
-  		if ($f) {
-  		    $params["file"] = $f->getCanonicalUrl();
-  		}
+      if ($f) {
+          $params["file"] = $f->getCanonicalUrl();
+      }
 
       $par = [];
       foreach($params as $key=>$value){
@@ -71,15 +73,15 @@
         }
       }
 
-  		$elem = Html::element('canvas', $par, $input);
+      $elem = Html::element('canvas', $par, $input);
 
-  		return [ $elem, 'noParse'=> true, 'isHTML'=> 'true' ];
-	}
+      return [ $elem, 'noParse'=> true, 'isHTML'=> 'true' ];
+  }
 
-	static public function parse3DFunc( Parser &$parser ) {
-	    global $wg3DAlloy;
-  		$args = func_get_args();
-  		array_shift( $args );
+  static public function parse3DFunc( Parser &$parser ) {
+      global $wg3DAlloy;
+      $args = func_get_args();
+      array_shift( $args );
 
       $f = Title::newFromText( trim($args[0]), NS_FILE );
       if ($f) {
@@ -90,18 +92,18 @@
       }
 
       $i=0;
-  		foreach($wg3DAlloy as $param=>$value) {
-  		    if (isset($args[$i])) {
-  		        $args[$i] = $param."=".$args[$i];
-  		    } else {
-  		        $args[$i] = $param."=".$value;
-  		    }
-  		    $i++;
+      foreach($wg3DAlloy as $param=>$value) {
+          if (isset($args[$i])) {
+              $args[$i] = $param."=".$args[$i];
+          } else {
+              $args[$i] = $param."=".$value;
+          }
+          $i++;
       }
 
-  		$params = [];
-  		parse_str( implode( "&", $args ), $params );
-  		$params = array_merge($wg3DAlloy, $params );
+      $params = [];
+      parse_str( implode( "&", $args ), $params );
+      $params = array_merge($wg3DAlloy, $params );
       $params["style"] = $wg3DAlloy["style"].' '.$params["style"];
       $params["class"] = $wg3DAlloy["class"].' '.$params["class"];
 
@@ -112,58 +114,60 @@
         }
       }
 
-  		$elem = Html::element('canvas', $par, $params["file"]);
+      $elem = Html::element('canvas', $par, $params["file"]);
 
-  		return [ $elem, 'noParse'=> true, 'isHTML'=> 'true' ];
-	}
+      return [ $elem, 'noParse'=> true, 'isHTML'=> 'true' ];
+  }
 
-	public static function onImageOpenShowImageInlineBefore( $imagepage, $out ){
-  		global $wg3DAlloy;
+  public static function onImageOpenShowImageInlineBefore( $imagepage, $out ){
+      global $wg3DAlloy;
+      if ($imagepage->getDisplayedFile()) {
+        if (self::check_file($imagepage->getDisplayedFile())) {
 
-  		if (self::check_file($imagepage->getDisplayedFile())) {
+              $params=$wg3DAlloy;
+              $params["file"] = $imagepage->getDisplayedFile()->getCanonicalUrl();
 
-  			    $params=$wg3DAlloy;
-  			    $params["file"] = $imagepage->getDisplayedFile()->getCanonicalUrl();
-
-            $par = [];
-            foreach($params as $key=>$value){
-              if ($value !== '') {
-                $par[$key]=$value;
+              $par = [];
+              foreach($params as $key=>$value){
+                if ($value !== '') {
+                  $par[$key]=$value;
+                }
               }
-            }
 
-  			    $out->addHtml(Html::element('canvas', $par, $params["file"]));
-  			    $out->addModules('ext.3DAlloy');
-  		}
-	}
+              $out->addHtml(Html::element('canvas', $par, $params["file"]));
+              $out->addModules('ext.3DAlloy');
+        }
+      }
+  }
 
     public static function onImageBeforeProduceHTML (&$dummy, &$title, &$file, &$frameParams, &$handlerParams, &$time, &$res) {
         global $wg3DAlloy;
+        if ($file) {
+          if (self::check_file($file)) {
 
-        if (self::check_file($file)) {
+              $params=array_merge($wg3DAlloy, $handlerParams);
+              $params["file"] = $file->getCanonicalUrl();
 
-            $params=array_merge($wg3DAlloy, $handlerParams);
-            $params["file"] = $file->getCanonicalUrl();
-
-            $par = [];
-            foreach($params as $key=>$value){
-              if ($value !== '') {
-                $par[$key]=$value;
+              $par = [];
+              foreach($params as $key=>$value){
+                if ($value !== '') {
+                  $par[$key]=$value;
+                }
               }
-            }
 
-            $res = Html::element('canvas', $par, $params["file"]);
-            return false;
-		    }
+              $res = Html::element('canvas', $par, $params["file"]);
+              return false;
+          }
+        }
 
-		    return true;
+        return true;
     }
 
-	function doTransform( $image, $dstPath, $dstUrl, $params, $flags = 0){
+  function doTransform( $image, $dstPath, $dstUrl, $params, $flags = 0){
     //is compulsory for ImageHandler
-	}
+  }
 
-	public static function check_file($file){
+  public static function check_file($file){
 
     return ($file->getMimeType() === "application/json" || $file->getMimeType() === "application/obj" || $file->getMimeType() === "application/stl" );
   }

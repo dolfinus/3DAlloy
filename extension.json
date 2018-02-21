@@ -21,6 +21,9 @@
         "STLLoader.js",
         "OrbitControls.js",
         "3DAlloy.js"
+      ],
+      "styles": [
+        "3DAlloy.css"
       ]
     }
   },
@@ -28,8 +31,8 @@
     "ThreeDimentionAlloy": "3DAlloy_magic.i18n.php"
   },
   "ResourceFileModulePaths": {
-    "localBasePath": "js",
-    "remoteExtPath": "3DAlloy/js"
+    "localBasePath": "modules",
+    "remoteExtPath": "3DAlloy/modules"
   },
   "MediaHandlers": {
     "application/json": "ThreeDimentionAlloy",

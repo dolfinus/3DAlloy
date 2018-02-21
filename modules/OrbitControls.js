@@ -16,13 +16,15 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	this.center = new THREE.Vector3();
 
-	this.userZoom = true;
+	this.userDblClick = true;
+
+	this.userZoom = false;
 	this.userZoomSpeed = 2.0;
 
 	this.userRotate = true;
 	this.userRotateSpeed = 2.0;
 
-	this.userPan = true;
+	this.userPan = false;
 	this.userPanSpeed = 2.0;
 
 	this.autoRotate = false;
@@ -66,6 +68,22 @@ THREE.OrbitControls = function ( object, domElement ) {
 	CanvasChangedEvent.initEvent('canvas_changed', false, false);
 	DoubleClickEvent.initEvent('dbl_click', false, false);
 
+
+	this.setRotate = function(value){
+		scope.userRotate = value;
+	};
+
+	this.setZoom = function(value){
+		scope.userZoom = value;
+	};
+
+	this.setPan = function(value){
+		scope.userPan = value;
+	};
+
+	this.setDblClick = function(value){
+		scope.userDblClick = value;
+	};
 
 	this.rotateLeft = function ( angle ) {
 
@@ -229,31 +247,25 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		event.preventDefault();
 
-		switch (event.button) {
-			case 0:
-				var date= new Date();
-				time=date.getTime();
-				if ((time-last_time)<=250) {this.dispatchEvent( DoubleClickEvent ); }
-				last_time=date.getTime();
-
-				state = STATE.ROTATE;
-				rotateStart.set( event.clientX, event.clientY );
-				break;
-
-			case 1:
+		if (scope.userZoom === true && event.button === 1) {
 				state = STATE.ZOOM;
 				zoomStart.set( event.clientX, event.clientY );
-				break;
+		} else if (scope.userPan === true && event.button === 2) {
 
-			case 2:
-				state = STATE.PAN;
-				break;
-			default:
-				state = STATE.NONE;
+       state = STATE.PAN;
 
+		} else {
+
+			var date= new Date();
+			time=date.getTime();
+			if ((time-last_time)<=250) {if ( scope.userDblClick === true ) this.dispatchEvent( DoubleClickEvent ); }
+			last_time=date.getTime();
+
+			state = STATE.ROTATE;
+			rotateStart.set( event.clientX, event.clientY );
 		}
-
-
+		var target = event.target || event.srcElement;
+		target.classList.add('grabbing');
 	}
 
 	function onMouseMove( event ) {
@@ -311,14 +323,17 @@ THREE.OrbitControls = function ( object, domElement ) {
 		if ( scope.userRotate === false ) return;
 
 		state = STATE.NONE;
+		
+		var target = event.target || event.srcElement;
+		target.classList.remove('grabbing');
 
 	}
 
 	function onMouseWheel( event ) {
-event.preventDefault();
+
 		if ( scope.enabled === false ) return;
 		if ( scope.userZoom === false ) return;
-
+event.preventDefault();
 		var delta = 0;
 
 		if ( event.wheelDelta ) { // WebKit / Opera / Explorer 9
@@ -348,30 +363,29 @@ event.preventDefault();
 
 		event.preventDefault();
 
-		switch ( event.touches.length ) {
+		if (scope.userZoom === true && event.touches.length === 1) {
+			state  = STATE.TOUCH_ZOOM;
+			var x = event.touches[ 0 ].pageX - event.touches[ 1 ].pageX;
+			var y = event.touches[ 0 ].pageY - event.touches[ 1 ].pageY;
+			zoomStart.set( x, y );
 
-			case 1:
-				var date= new Date();
-				time=date.getTime();
-				if ((time-last_time)<=250) {this.dispatchEvent( DoubleClickEvent ); }
-				last_time=date.getTime();
+		} else if (event.touches.length === 2) {
 
-				state = STATE.TOUCH_ROTATE;
-				rotateStart.set( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
-				break;
+       state = STATE.NONE;
 
-			case 2:
-				state  = STATE.TOUCH_ZOOM;
-				var x = event.touches[ 0 ].pageX - event.touches[ 1 ].pageX;
-				var y = event.touches[ 0 ].pageY - event.touches[ 1 ].pageY;
-				zoomStart.set( x, y );
-				break;
+		} else {
 
-			default:
-				state = STATE.NONE;
+			var date= new Date();
+			time=date.getTime();
+			if ((time-last_time)<=250) {if ( scope.userDblClick === true ) this.dispatchEvent( DoubleClickEvent ); }
+			last_time=date.getTime();
 
+			state = STATE.TOUCH_ROTATE;
+			rotateStart.set( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
 		}
-
+		
+		var target = event.target || event.srcElement;
+		target.classList.add('grabbing');
 	}
 
 	function onTouchMove( event ) {
@@ -421,6 +435,9 @@ event.preventDefault();
 		if ( scope.userRotate === false ) return;
 
 		state = STATE.NONE;
+		
+		var target = event.target || event.srcElement;
+		target.classList.remove('grabbing');
 
 	}
 
