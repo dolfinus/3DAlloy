@@ -29,11 +29,13 @@ class ThreeDimentionAlloy extends ImageHandler {
   public static function onMimeMagicInit(MimeAnalyzer $mime) {
     $mime->addExtraTypes('application/json json 3djson 3dj three buff buffjson');
     $mime->addExtraTypes('application/obj obj');
-    $mime->addExtraTypes('application/stl stl stlb');
+    $mime->addExtraTypes('application/sla stl stlb');
+    $mime->addExtraTypes('text/plain stl');
+    $mime->addExtraTypes('application/octet-stream stl stlb');
 
-    $mime->addExtraInfo('application/json [TEXT]');
-    $mime->addExtraInfo('application/obj [TEXT]');
-    $mime->addExtraInfo('application/stl [TEXT]');
+    $mime->addExtraInfo('application/json [DRAWING]');
+    $mime->addExtraInfo('application/obj [DRAWING]');
+    $mime->addExtraInfo('application/sla [DRAWING]');
   }
 
   static public function onParserFirstCallInit(Parser &$parser) {
@@ -209,7 +211,6 @@ class ThreeDimentionAlloy extends ImageHandler {
   }
 
   public static function check_file($file) {
-
-    return($file->getMimeType() === "application/json" || $file->getMimeType() === "application/obj" || $file->getMimeType() === "application/stl");
+    return in_array($file->getMimeType(), ["application/json", "application/obj", "application/sla", "application/stl"]);
   }
 }
