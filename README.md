@@ -113,8 +113,8 @@ $wg3DAlloy["class"]  = 'someclass';
 |Action                                       |Controls                               |
 |:--------------------------------------------|:--------------------------------------|
 |Camera rotate                                |Swipe, left mouse key hold and move    |
-|Camera pan (if pan enabled)                  |Right key hold and move                |
 |Camera zoom (if zoom enabled)                |Mouse wheel, hold wheel and move, pinch|
+|Camera pan (if pan enabled)                  |Right key hold and move                |
 |Model rotate                                 |←↑→↓ keys                              |
 |Model rotation reset                         |Home key                               |
 |Model rotation play/pause                    |Double click, double tap               |
