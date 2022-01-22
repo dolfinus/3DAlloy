@@ -64,7 +64,7 @@ $wgFileExtensions = array_merge(
 {{#3d:Model.json|width}}
 {{#3d:Model.json|width|height}}
 ...
-{{#3d:Model.json|width|height|color|opacity|norotate|scale|z|style|class}}
+{{#3d:Model.json|width|height|color|opacity|zoom|pan|norotate|scale|z|style|class}}
 ```
 
 Instead of uploaded filename you can use an url for file located in external site.
@@ -87,6 +87,8 @@ You also can use url instead of short filename.
 |height   |Canvas height in pixels                |300          |
 |color    |Model RGB color as hex                 |0xff00ff     |
 |opacity  |Model opacity as decimal between 0...1 |0.8          |
+|zoom     |If true or 1, canvas can be zoomed     |false        |
+|pan      |If true or 1, canvas can be panned     |false        |
 |norotate |If true or 1, model does not rotate    |false        |
 |scale    |Model scale, in percent                |100          |
 |z        |Model z coordinate                     |75           |
@@ -111,8 +113,8 @@ $wg3DAlloy["class"]  = 'someclass';
 |Action                                       |Controls                               |
 |:--------------------------------------------|:--------------------------------------|
 |Camera rotate                                |Swipe, left mouse key hold and move    |
-|Camera pan                                   |Right key hold and move                |
-|Camera zoom                                  |Mouse wheel, hold wheel and move, pinch|
+|Camera pan (if pan enabled)                  |Right key hold and move                |
+|Camera zoom (if zoom enabled)                |Mouse wheel, hold wheel and move, pinch|
 |Model rotate                                 |←↑→↓ keys                              |
 |Model rotation reset                         |Home key                               |
 |Model rotation play/pause                    |Double click, double tap               |

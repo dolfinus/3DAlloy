@@ -4,12 +4,14 @@ $wg3DAlloy_ = $wg3DAlloy;
 unset($wg3DAlloy);
 
 global $wg3DAlloy;
-$wg3DAlloy        =[];
-$wg3DAlloy["file"]='';
+$wg3DAlloy             = [];
+$wg3DAlloy["file"]     = '';
 $wg3DAlloy["width"]    = isset($wg3DAlloy_["width"]   ) ? $wg3DAlloy_["width"]   : 300;
 $wg3DAlloy["height"]   = isset($wg3DAlloy_["height"]  ) ? $wg3DAlloy_["height"]  : 300;
 $wg3DAlloy["color"]    = isset($wg3DAlloy_["color"]   ) ? $wg3DAlloy_["color"]   :  '';
 $wg3DAlloy["opacity"]  = isset($wg3DAlloy_["opacity"] ) ? $wg3DAlloy_["opacity"] :  '';
+$wg3DAlloy["zoom"]     = isset($wg3DAlloy_["zoom"]    ) ? $wg3DAlloy_["zoom"]    :  '';
+$wg3DAlloy["pan"]      = isset($wg3DAlloy_["pan"]     ) ? $wg3DAlloy_["pan"]     :  '';
 $wg3DAlloy["norotate"] = isset($wg3DAlloy_["norotate"]) ? $wg3DAlloy_["norotate"]:  '';
 $wg3DAlloy["scale"]    = isset($wg3DAlloy_["scale"]   ) ? $wg3DAlloy_["scale"]   :  '';
 $wg3DAlloy["z"]        = isset($wg3DAlloy_["z"]       ) ? $wg3DAlloy_["z"]       :  '';
@@ -81,7 +83,7 @@ class ThreeDimentionAlloy extends ImageHandler {
     $par = [];
     foreach ($params as $key => $value) {
       if ($value !== '') {
-        $par[$key]=$value;
+        $par[$key] = $value;
       }
     }
 

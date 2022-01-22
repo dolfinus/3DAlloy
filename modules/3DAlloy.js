@@ -47,6 +47,10 @@ Object3D.prototype.set_params = function(def){
   this.params.opacity         = this.canvas.getAttribute('opacity')  !== null ? parseFloat(this.canvas.getAttribute('opacity') )    : def.opacity;
   this.params.scale           = this.canvas.getAttribute('scale')    !== null ? parseFloat(this.canvas.getAttribute('scale')   )    : def.scale;
   this.params.z               = this.canvas.getAttribute('z')        !== null ? parseFloat(this.canvas.getAttribute('z')       )    : def.z;
+  this.params.zoom            = this.canvas.getAttribute('zoom')     !== null ? ((this.canvas.getAttribute('zoom') === "1" ||
+                                                                                  this.canvas.getAttribute('zoom') === "true") ? true : false) : def.zoom;
+  this.params.pan             = this.canvas.getAttribute('pan')      !== null ? ((this.canvas.getAttribute('pan') === "1" ||
+                                                                                  this.canvas.getAttribute('pan') === "true") ? true : false) : def.pan;
   this.params.norotate        = this.canvas.getAttribute('norotate') !== null ? ((this.canvas.getAttribute('norotate') === "1" ||
                                                                                   this.canvas.getAttribute('norotate') === "true") ? true : false) : def.norotate;
 };
@@ -200,6 +204,7 @@ var CanvasChangedEvent = document.createEvent('Event'),
   page_params = document.getElementsByTagName('body')[0].className,
   dark = (page_params.indexOf("dark") !== -1),
   edit = (page_params.indexOf("action-edit") !== -1 || page_params.indexOf("action-submit") !== -1);
+
 if (!edit) document.addEventListener("keydown", onKeyDown, false);
 CanvasChangedEvent.initEvent('canvas_changed', false, false);
 DoubleClickEvent.initEvent(  'dbl_click',      false, false);
