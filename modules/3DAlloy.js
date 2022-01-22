@@ -94,6 +94,8 @@ Object3D.prototype.add_renderer = function() {
 
 Object3D.prototype.add_controls = function() {
   this.controls = new THREE.OrbitControls(this.camera, this.canvas);
+  this.controls.setZoom(this.params.zoom);
+  this.controls.setPan(this.params.pan);
 };
 
 Object3D.prototype.add_plane = function() {
@@ -217,7 +219,9 @@ window.default_params = {
     opacity: 0.8,
     scale: 100,
     z: 75,
-    norotate: false
+    norotate: false,
+    zoom: false,
+    pan: false,
 };
 window.keys = {
     LEFT: 37,
@@ -274,19 +278,20 @@ function recreate_objects() {
   objects.forEach(function(item, id) {
     if (item.object === undefined) {
       item.object = new Object3D();
+
       item.object.canvas = item;
       if (item.width === 0 || item.height === 0) {
         window.addEventListener("resize", item.object.redraw);
         item.object.resize();
       }
 
+      item.object.set_params(window.default_params);
       item.object.create_scene();
       item.object.add_light();
       item.object.add_camera();
       item.object.add_renderer();
       item.object.add_controls();
       item.object.add_plane();
-      item.object.set_params(window.default_params);
 
       item.object.load_file();
     }

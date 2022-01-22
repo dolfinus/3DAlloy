@@ -132,7 +132,7 @@ class ThreeDimentionAlloy extends ImageHandler {
     $par = [];
     foreach ($params as $key => $value) {
       if ($value !== '') {
-        $par[$key]=$value;
+        $par[$key] = $value;
       }
     }
 
@@ -160,7 +160,7 @@ class ThreeDimentionAlloy extends ImageHandler {
         $par = [];
         foreach ($params as $key => $value) {
           if ($value !== '') {
-            $par[$key]=$value;
+            $par[$key] = $value;
           }
         }
 
@@ -188,7 +188,7 @@ class ThreeDimentionAlloy extends ImageHandler {
           $par = [];
           foreach ($params as $key => $value) {
             if ($value !== '') {
-              $par[$key]=$value;
+              $par[$key] = $value;
             }
           }
 
