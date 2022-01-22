@@ -18,13 +18,13 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	this.userDblClick = true;
 
-	this.userZoom = true;
+	this.userZoom = false;
 	this.userZoomSpeed = 2.0;
 
 	this.userRotate = true;
 	this.userRotateSpeed = 2.0;
 
-	this.userPan = true;
+	this.userPan = false;
 	this.userPanSpeed = 2.0;
 
 	this.autoRotate = false;
