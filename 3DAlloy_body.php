@@ -1,4 +1,5 @@
 <?php
+use MediaWiki\MediaWikiServices;
 global $wg3DAlloy;
 $wg3DAlloy_ = $wg3DAlloy;
 unset($wg3DAlloy);
@@ -74,7 +75,7 @@ class ThreeDimentionAlloy extends ImageHandler {
 
     $f = Title::newFromText($params["file"], NS_FILE);
     if ($f) {
-      $f = wfFindFile($f->getBaseText());
+      $f = MediaWikiServices::getInstance()->getRepoGroup()->findFile( $f->getBaseText());
     }
     if ($f) {
       $params["file"] = $f->getCanonicalUrl();
@@ -107,7 +108,7 @@ class ThreeDimentionAlloy extends ImageHandler {
 
     $f = Title::newFromText(trim($args[0]), NS_FILE);
     if ($f) {
-      $f = wfFindFile($f->getBaseText());
+      $f = MediaWikiServices::getInstance()->getRepoGroup()->findFile($f->getBaseText());
     }
     if ($f) {
       $args[0] = ($f->getCanonicalUrl());
