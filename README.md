@@ -7,7 +7,7 @@ There you can see [example 3D model page](https://en.crystalls.info/Template:Ico
 
 ## Example
 
-![example of 3D model view](https://upload.wikimedia.org/wikipedia/mediawiki/f/f7/3DAlloy.png "3D model example")
+![example of 3D model view](https://upload.wikimedia.org/wikipedia/commons/f/f7/3DAlloy.png "3D model example")
 
 ## Supported file extensions
 
