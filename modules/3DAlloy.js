@@ -132,6 +132,8 @@ Object3D.prototype.load_obj = function(mesh) {
   mesh.traverse(function(child) {
     if (child instanceof THREE.Mesh) {
       child.material = create_material(params.color, params.opacity);
+      child.geometry.computeBoundingBox();
+      child.geometry.center();
     }
   });
   this.add_model(mesh);
