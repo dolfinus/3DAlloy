@@ -1,7 +1,7 @@
 Object3D = function () {
   this.canvas   = {};
   this.camera   = {};
-  this.scnere   = {};
+  this.scene    = {};
   this.renderer = {};
   this.controls = {};
   this.model    = false;
@@ -45,7 +45,7 @@ Object3D.prototype.set_params = function(def){
   this.params.file            = this.canvas.getAttribute('file');
   this.params.color           = this.canvas.getAttribute('color')    !== null ? parseInt(  this.canvas.getAttribute('color'),16)    : def.color;
   this.params.opacity         = this.canvas.getAttribute('opacity')  !== null ? parseFloat(this.canvas.getAttribute('opacity') )    : def.opacity;
-  this.params.scale           = this.canvas.getAttribute('scale')    !== null ? parseFloat(this.canvas.getAttribute('scale')   )    : def.scale;
+  this.params.scale           = this.canvas.getAttribute('scale')    !== null ? parseFloat(this.canvas.getAttribute('scale')   )    : undefined;
   this.params.z               = this.canvas.getAttribute('z')        !== null ? parseFloat(this.canvas.getAttribute('z')       )    : def.z;
   this.params.zoom            = this.canvas.getAttribute('zoom')     !== null ? ((this.canvas.getAttribute('zoom') === "1" ||
                                                                                   this.canvas.getAttribute('zoom') === "true") ? true : false) : def.zoom;
@@ -105,6 +105,7 @@ Object3D.prototype.add_plane = function() {
   this.plane.updateMatrix();
   this.scene.add(this.plane);
 };
+
 function create_material(color,opacity) {
   var material = model_material.clone(model_material);
   material.color.setHex(color);
@@ -113,7 +114,11 @@ function create_material(color,opacity) {
 }
 
 Object3D.prototype.add_model = function(mesh) {
-  mesh.scale.x = mesh.scale.y = mesh.scale.z = this.params.scale;
+  var box = new THREE.Box3().setFromObject(mesh);
+  var size = box.size(size);
+  var max_axis = Math.max(size.x, size.y, size.z);
+  var scale = Math.max(this.canvas.width, this.canvas.height) * 0.5 / max_axis;
+  mesh.scale.multiplyScalar((this.params.scale !== undefined ? this.params.scale : 1.0) * scale);
   mesh.position.y = this.params.z;
   mesh.updateMatrix();
   this.scene.add(mesh);
@@ -135,8 +140,7 @@ Object3D.prototype.load_obj = function(mesh) {
 Object3D.prototype.load_json = function(geometry) {
   geometry.computeBoundingBox();
   geometry.center();
-
-  var material = create_material(this.params.color,this.params);
+  var material = create_material(this.params.color, this.params.opacity);
   var mesh = new THREE.Mesh(geometry, material);
   this.add_model(mesh);
 };
@@ -218,7 +222,6 @@ window.speedY = 0.015;
 window.default_params = {
     color: 0xff00ff,
     opacity: 0.8,
-    scale: 100,
     z: 75,
     norotate: false,
     zoom: false,
