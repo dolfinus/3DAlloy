@@ -90,7 +90,7 @@ You also can use url instead of short filename.
 |zoom     |If true or 1, canvas can be zoomed     |false        |
 |pan      |If true or 1, canvas can be panned     |false        |
 |norotate |If true or 1, model does not rotate    |false        |
-|scale    |Model scale, in percent                |100          |
+|scale    |Model scale                            |1            |
 |z        |Model z coordinate                     |75           |
 |style    |Additional canvas CSS style            |             |
 |class    |Additional canvas HTML class           |             |

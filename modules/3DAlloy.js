@@ -1,5 +1,4 @@
 Object3D = function () {
-  this.canvas   = {};
   this.camera   = {};
   this.scene    = {};
   this.renderer = {};
@@ -14,22 +13,11 @@ Object3D = function () {
 var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
 window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 
-var cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
-
-
 Object3D.prototype.resize = function() {
   var value = Math.max(Math.min(((window.innerHeight !== 0) ? window.innerHeight : screen.height) - 200, ((window.innerWidth !== 0) ? window.innerWidth : screen.width) - 300), 300);
   this.canvas.width = value;
   this.canvas.height = value;
-//  this.render();
 };
-
-Object3D.prototype.render = function() {
-  this.resize();
-  this.renderer.setSize(this.canvas.width, this.canvas.height);
-  this.renderer.clear();
-  this.render();
-}
 
 Object3D.prototype.rotate = function(x, y) {
   this.model.rotation.set(x, y, 0);
@@ -37,8 +25,7 @@ Object3D.prototype.rotate = function(x, y) {
 };
 
 Object3D.prototype.rotate_relative = function(x, y) {
-  this.model.rotation.set(this.model.rotation.x+x, this.model.rotation.y+y, 0);
-  this.render();
+  this.rotate(this.model.rotation.x+x, this.model.rotation.y+y);
 };
 
 Object3D.prototype.set_params = function(def){
@@ -48,11 +35,11 @@ Object3D.prototype.set_params = function(def){
   this.params.scale           = this.canvas.getAttribute('scale')    !== null ? parseFloat(this.canvas.getAttribute('scale')   )    : undefined;
   this.params.z               = this.canvas.getAttribute('z')        !== null ? parseFloat(this.canvas.getAttribute('z')       )    : def.z;
   this.params.zoom            = this.canvas.getAttribute('zoom')     !== null ? ((this.canvas.getAttribute('zoom') === "1" ||
-                                                                                  this.canvas.getAttribute('zoom') === "true") ? true : false) : def.zoom;
+                                                                                  this.canvas.getAttribute('zoom') === "true")) : def.zoom;
   this.params.pan             = this.canvas.getAttribute('pan')      !== null ? ((this.canvas.getAttribute('pan') === "1" ||
-                                                                                  this.canvas.getAttribute('pan') === "true") ? true : false) : def.pan;
+                                                                                  this.canvas.getAttribute('pan') === "true")) : def.pan;
   this.params.norotate        = this.canvas.getAttribute('norotate') !== null ? ((this.canvas.getAttribute('norotate') === "1" ||
-                                                                                  this.canvas.getAttribute('norotate') === "true") ? true : false) : def.norotate;
+                                                                                  this.canvas.getAttribute('norotate') === "true")) : def.norotate;
 };
 
 Object3D.prototype.create_scene = function() {
@@ -148,15 +135,13 @@ Object3D.prototype.load_json = function(geometry) {
 };
 
 Object3D.prototype.load_file = function() {
-  var loader, self = this;
+  var load_func = this.load_json.bind(this);
+  var loader = undefined;
 
   if (this.params.file.match(/\.obj$/ig) !== null) {
 
     loader = new THREE.OBJLoader();
-    loader.load(this.params.file, function(geometry){
-      self.load_obj(geometry);
-    });
-    return true;
+    load_func = this.load_obj.bind(this);
 
   } else if (this.params.file.match(/\.(stl|stlb)$/ig) !== null) {
 
@@ -176,8 +161,9 @@ Object3D.prototype.load_file = function() {
   }
 
   loader.load(this.params.file, function(geometry){
-    self.load_json(geometry);
+    load_func(geometry);
   });
+
   return true;
 };
 
@@ -187,11 +173,12 @@ Object3D.prototype.render = function() {
 };
 
 Object3D.prototype.animate = function() {
-  if (this.model === undefined) return;
-  //setTimeout( function() {requestAnimationFrame( animate );}, 1000 / 30 );
-  var frame = requestAnimationFrame(this.animate.bind(this));
+  requestAnimationFrame(this.animate.bind(this));
+  if (!this.model) return;
   this.animation = true;
-  if (this.model && this.rotation) {
+  var is_visible = this.canvas.getAttribute('visible') !== null ? ((this.canvas.getAttribute('visible') === "1" ||
+                                                                    this.canvas.getAttribute('visible') === "true")) : true;
+  if (is_visible && this.rotation) {
       this.rotate_relative(speedX, speedY);
   }
 };
@@ -249,6 +236,22 @@ window.model_material   = new THREE.MeshLambertMaterial({
 });
 
 window.recreate_3d = recreate_objects;
+
+if (IntersectionObserver !== undefined) {
+  var options = {
+    threshold: 0.2
+  }
+  var callback = function(entries, observer) {
+    entries.forEach(function(entry) {
+      entry.target.setAttribute("visible", entry.isIntersecting.toString());
+    })
+  };
+
+  window.observer_3d = new IntersectionObserver(callback, options);
+} else {
+  window.observer_3d = undefined;
+}
+
 recreate_objects();
 
 
@@ -281,7 +284,12 @@ function UnRotate(event) {
 }
 
 function recreate_objects() {
+  if (window.observer_3d !== undefined) {
+    window.observer_3d.disconnect();
+  }
+
   var objects = document.getElementsByClassName('threed-container');
+
   objects.forEach(function(item, id) {
     if (item.object === undefined) {
       item.object = new Object3D();
@@ -302,8 +310,10 @@ function recreate_objects() {
 
       item.object.load_file();
     }
-      item.addEventListener("canvas_changed", OnCanvasRedraw, false);
-      item.addEventListener("dbl_click", UnRotate, false);
+
+    item.addEventListener("canvas_changed", OnCanvasRedraw, false);
+    item.addEventListener("dbl_click", UnRotate, false);
+
     if(item.className.indexOf('locked') === -1){
       item.object.controls.setRotate(   true);
       item.object.controls.setDblClick( true);
@@ -311,6 +321,13 @@ function recreate_objects() {
       item.object.controls.setRotate(  false);
       item.object.controls.setDblClick(false);
     }
+
+    item.object.render();
+
+    if (window.observer_3d !== undefined) {
+      window.observer_3d.observe(item);
+    }
+
     if (item.object.animation === false) item.object.animate();
   });
 }
