@@ -123,9 +123,10 @@ Object3D.prototype.add_model = function(mesh) {
 };
 
 Object3D.prototype.load_obj = function(mesh) {
+  params = this.params;
   mesh.traverse(function(child) {
     if (child instanceof THREE.Mesh) {
-      child.material = create_material(this.params.color,this.params);
+      child.material = create_material(params.color, params.opacity);
     }
   });
   this.add_model(mesh);
