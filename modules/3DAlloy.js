@@ -99,9 +99,9 @@ Object3D.prototype.add_controls = function() {
 };
 
 Object3D.prototype.add_plane = function() {
-  this.plane = new THREE.GridHelper(150, 8);
+  this.plane = new THREE.GridHelper(window.plane_size, 8);
   this.plane.setColors(plane_color, plane_color);
-  this.plane.position.y = -75;
+  this.plane.position.y = -window.plane_size / 2;
   this.plane.updateMatrix();
   this.scene.add(this.plane);
 };
@@ -117,7 +117,7 @@ Object3D.prototype.add_model = function(mesh) {
   var box = new THREE.Box3().setFromObject(mesh);
   var size = box.size(size);
   var max_axis = Math.max(size.x, size.y, size.z);
-  var scale = Math.max(this.canvas.width, this.canvas.height) * 0.5 / max_axis;
+  var scale = window.plane_size / max_axis;
   mesh.scale.multiplyScalar((this.params.scale !== undefined ? this.params.scale : 1.0) * scale);
   mesh.position.y = this.params.z;
   mesh.updateMatrix();
@@ -219,6 +219,7 @@ CanvasChangedEvent.initEvent('canvas_changed', false, false);
 DoubleClickEvent.initEvent(  'dbl_click',      false, false);
 
 window.rotation = true;
+window.plane_size = 150;
 window.speedX = 0.01;
 window.speedY = 0.015;
 window.default_params = {
