@@ -31,6 +31,7 @@ class ThreeDimentionAlloy extends ImageHandler {
 
   public static function onMimeMagicInit(MimeAnalyzer $mime) {
     $mime->addExtraTypes('application/json json 3djson 3dj three buff buffjson');
+    $mime->addExtraTypes('text/plain obj');
     $mime->addExtraTypes('application/obj obj');
     $mime->addExtraTypes('application/sla stl stlb');
     $mime->addExtraTypes('text/plain stl');
