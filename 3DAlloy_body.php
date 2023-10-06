@@ -42,6 +42,12 @@ class ThreeDimentionAlloy extends ImageHandler {
     $mime->addExtraInfo('application/sla [DRAWING]');
   }
 
+  public static function onMimeMagicImproveFromExtension( MimeAnalyzer $mimeAnalyzer, $ext, &$mime ) {
+	  if ( $mime !== 'application/json' && in_array( $ext, ['json', '3djson', '3dj', 'three', 'buff', 'buffjson'] ) ) {
+		  $mime = 'application/json';
+	  }
+  }
+
   static public function onParserFirstCallInit(Parser &$parser) {
     $parser->setFunctionHook("3d", "ThreeDimentionAlloy::parse3DFunc");
     $parser->setHook('3d', "ThreeDimentionAlloy::parse3DTag");
