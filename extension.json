@@ -63,7 +63,8 @@
     ],
     "MimeMagicInit": [
       "ThreeDimentionAlloy::onMimeMagicInit"
-    ]
+    ],
+    "MimeMagicImproveFromExtension": "ThreeDimentionAlloy::onMimeMagicImproveFromExtension"
   },
   "manifest_version": 1
 }
