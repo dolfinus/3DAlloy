@@ -3,7 +3,7 @@
   "author": "Dolfinus",
   "url": "https://www.mediawiki.org/wiki/Extension:3DAlloy",
   "description": "This extension provides a 3D viewer for JSON/Buff files",
-  "version": "1.7",
+  "version": "1.8",
   "license-name": "MIT",
   "type": "media",
   "ResourceModules": {
