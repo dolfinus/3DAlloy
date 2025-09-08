@@ -103,6 +103,10 @@ class ThreeDimentionAlloy extends ImageHandler {
       }
     }
 
+    $par = Sanitizer::validateAttributes( $par, [
+      'file', 'width', 'height', 'color', 'opacity', 'zoom', 'pan', 'norotate', 'scale', 'z', 'style', 'class',
+    ] );
+
     $elem = Html::element('canvas', $par, $input);
 
     return [ $elem, 'noParse'=> true, 'isHTML'=> 'true' ];
@@ -151,6 +155,10 @@ class ThreeDimentionAlloy extends ImageHandler {
         $par['color'] = '0x'.$par['color'];
       }
     }
+
+    $par = Sanitizer::validateAttributes( $par, [
+      'file', 'width', 'height', 'color', 'opacity', 'zoom', 'pan', 'norotate', 'scale', 'z', 'style', 'class',
+    ] );
 
     $elem = Html::element('canvas', $par, $params["file"]);
 
