@@ -20,6 +20,10 @@ $wg3DAlloy["style"]    = isset($wg3DAlloy_["style"]   ) ? $wg3DAlloy_["style"]  
 $wg3DAlloy["class"]    = 'threed-container'.
             (isset($wg3DAlloy_["class"]) ? ' '.$wg3DAlloy_["class"]  : '');
 
+$wg3DAlloyAllowedAttributes = [
+   'file', 'width', 'height', 'color', 'opacity', 'zoom', 'pan', 'norotate', 'scale', 'z', 'style', 'class',
+];
+
 class ThreeDimentionAlloy extends ImageHandler {
   public static function onBeforePageDisplay(OutputPage $out) {
     global $wg3DAlloy;
@@ -103,9 +107,7 @@ class ThreeDimentionAlloy extends ImageHandler {
       }
     }
 
-    $par = Sanitizer::validateAttributes( $par, [
-      'file', 'width', 'height', 'color', 'opacity', 'zoom', 'pan', 'norotate', 'scale', 'z', 'style', 'class',
-    ] );
+    $par = Sanitizer::validateAttributes( $par, $wg3DAlloyAllowedAttributes );
 
     $elem = Html::element('canvas', $par, $input);
 
@@ -156,9 +158,7 @@ class ThreeDimentionAlloy extends ImageHandler {
       }
     }
 
-    $par = Sanitizer::validateAttributes( $par, [
-      'file', 'width', 'height', 'color', 'opacity', 'zoom', 'pan', 'norotate', 'scale', 'z', 'style', 'class',
-    ] );
+    $par = Sanitizer::validateAttributes( $par, $wg3DAlloyAllowedAttributes );
 
     $elem = Html::element('canvas', $par, $params["file"]);
 
