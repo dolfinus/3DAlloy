@@ -20,6 +20,7 @@ $wg3DAlloy["style"]    = isset($wg3DAlloy_["style"]   ) ? $wg3DAlloy_["style"]  
 $wg3DAlloy["class"]    = 'threed-container'.
             (isset($wg3DAlloy_["class"]) ? ' '.$wg3DAlloy_["class"]  : '');
 
+global $wg3DAlloyAllowedAttributes;
 $wg3DAlloyAllowedAttributes = [
    'file', 'width', 'height', 'color', 'opacity', 'zoom', 'pan', 'norotate', 'scale', 'z', 'style', 'class',
 ];
@@ -77,7 +78,7 @@ class ThreeDimentionAlloy extends ImageHandler {
   }
 
   static public function parse3DTag($input, array $args, Parser $parser, PPFrame $frame) {
-    global $wg3DAlloy;
+    global $wg3DAlloy, $wg3DAlloyAllowedAttributes;
 
     $params = array_merge($wg3DAlloy, $args);
     $params["style"] = $wg3DAlloy["style"].' '.$params["style"];
@@ -115,7 +116,8 @@ class ThreeDimentionAlloy extends ImageHandler {
   }
 
   static public function parse3DFunc(Parser &$parser) {
-    global $wg3DAlloy;
+    global $wg3DAlloy, $wg3DAlloyAllowedAttributes;
+
     $args = func_get_args();
     array_shift($args);
 
