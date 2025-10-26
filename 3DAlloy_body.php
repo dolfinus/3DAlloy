@@ -1,6 +1,13 @@
 <?php
+use MediaWiki\Html\Html;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Output\OutputPage;
+use MediaWiki\Parser\Parser;
+use MediaWiki\Parser\PPFrame;
+use MediaWiki\Parser\Sanitizer;
 use MediaWiki\Title\Title;
+use Wikimedia\Mime\MimeAnalyzer;
+
 global $wg3DAlloy;
 $wg3DAlloy_ = $wg3DAlloy;
 unset($wg3DAlloy);
