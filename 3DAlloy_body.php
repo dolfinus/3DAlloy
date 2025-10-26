@@ -1,5 +1,6 @@
 <?php
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Title\Title;
 global $wg3DAlloy;
 $wg3DAlloy_ = $wg3DAlloy;
 unset($wg3DAlloy);
