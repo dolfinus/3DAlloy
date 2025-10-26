@@ -6,6 +6,9 @@
   "version": "1.9",
   "license-name": "MIT",
   "type": "media",
+  "requires": {
+    "MediaWiki": ">= 1.43"
+  },
   "ResourceModules": {
     "ext.3DAlloy": {
       "position": "bottom",
